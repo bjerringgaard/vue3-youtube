@@ -229,5 +229,5 @@ declare const YouTube: import("vue").DefineComponent<{
     width: string | number;
     host: string;
 }>;
-export declare type Methods = (typeof YouTube)['methods'];
+export declare type Methods = typeof YouTube['methods'];
 export default YouTube;

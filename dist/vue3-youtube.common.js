@@ -2821,7 +2821,7 @@ if (typeof window !== 'undefined') {
 // EXTERNAL MODULE: external {"commonjs":"vue","commonjs2":"vue","root":"Vue"}
 var external_commonjs_vue_commonjs2_vue_root_Vue_ = __webpack_require__("8bbf");
 
-// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader-v16/dist??ref--0-1!./src/YouTube.vue?vue&type=template&id=38535678&bindings={}
+// CONCATENATED MODULE: ./node_modules/cache-loader/dist/cjs.js??ref--12-0!./node_modules/babel-loader/lib!./node_modules/vue-loader-v16/dist/templateLoader.js??ref--6!./node_modules/cache-loader/dist/cjs.js??ref--0-0!./node_modules/vue-loader-v16/dist??ref--0-1!./src/YouTube.vue?vue&type=template&id=2e369f91&bindings={}
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return Object(external_commonjs_vue_commonjs2_vue_root_Vue_["openBlock"])(), Object(external_commonjs_vue_commonjs2_vue_root_Vue_["createBlock"])("div", {
@@ -2831,7 +2831,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     style: _ctx.wrapperStyle
   }, null, 4)], 4);
 }
-// CONCATENATED MODULE: ./src/YouTube.vue?vue&type=template&id=38535678&bindings={}
+// CONCATENATED MODULE: ./src/YouTube.vue?vue&type=template&id=2e369f91&bindings={}
 
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.for-each.js
 var es_array_for_each = __webpack_require__("4160");
@@ -2925,22 +2925,27 @@ var YouTube = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineCompon
     return data;
   },
   mounted: function mounted() {
-    var _this = this;
+    var _window$onYouTubeIfra,
+        _this = this;
 
     if (!window.onYouTubeIframeAPIReadyResolvers) {
       window.onYouTubeIframeAPIReadyResolvers = [];
-    }
+    } // Add our resolver to the queue regardless of script status
+
+
+    (_window$onYouTubeIfra = window.onYouTubeIframeAPIReadyResolvers) === null || _window$onYouTubeIfra === void 0 ? void 0 : _window$onYouTubeIfra.push(this.resolver);
 
     if (!window.onYouTubeIframeAPIReady) {
       window.onYouTubeIframeAPIReady = function () {
-        var _window$onYouTubeIfra;
+        var _window$onYouTubeIfra2;
 
         // eslint-disable-next-line no-unused-expressions
-        (_window$onYouTubeIfra = window.onYouTubeIframeAPIReadyResolvers) === null || _window$onYouTubeIfra === void 0 ? void 0 : _window$onYouTubeIfra.forEach(function (resolver) {
+        (_window$onYouTubeIfra2 = window.onYouTubeIframeAPIReadyResolvers) === null || _window$onYouTubeIfra2 === void 0 ? void 0 : _window$onYouTubeIfra2.forEach(function (resolver) {
           resolver();
         });
       };
-    }
+    } // Only attempt to initialize player after API is ready
+
 
     this.promise.then(function () {
       return _this.initPlayer();
@@ -2949,10 +2954,6 @@ var YouTube = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineCompon
     var tag = document.getElementById(id);
 
     if (!tag) {
-      var _window$onYouTubeIfra2;
-
-      // eslint-disable-next-line no-unused-expressions
-      (_window$onYouTubeIfra2 = window.onYouTubeIframeAPIReadyResolvers) === null || _window$onYouTubeIfra2 === void 0 ? void 0 : _window$onYouTubeIfra2.push(this.resolver);
       tag = document.createElement('script');
       tag.id = id;
       tag.src = 'https://www.youtube.com/iframe_api';
@@ -2961,7 +2962,8 @@ var YouTube = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineCompon
       if (firstScriptTag && firstScriptTag.parentNode) {
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       }
-    } else {
+    } else if (window.YT && window.YT.Player) {
+      // Only resolve immediately if YT is actually fully loaded
       this.resolver();
     }
   },
@@ -2969,7 +2971,16 @@ var YouTube = Object(external_commonjs_vue_commonjs2_vue_root_Vue_["defineCompon
     initPlayer: function initPlayer() {
       var _this2 = this;
 
-      this.initiated = true; // eslint-disable-next-line no-undef
+      this.initiated = true; // Safety check to ensure YouTube API is available
+
+      if (typeof window.YT === 'undefined' || !window.YT.Player) {
+        console.warn('YouTube API not available. Retrying in 100ms...');
+        setTimeout(function () {
+          return _this2.initPlayer();
+        }, 100);
+        return;
+      } // eslint-disable-next-line no-undef
+
 
       this.player = new YT.Player(this.$refs.youtube, {
         height: this.height,
