@@ -34,7 +34,7 @@
     "version": "yarn version"
   },
   "dependencies": {
-    "@types/youtube": "^0.0.39",
+    "@types/youtube": "^0.1.2",
     "core-js": "^3.6.5",
     "get-youtube-id": "^1.0.1",
     "vue": "^3.0.0"
