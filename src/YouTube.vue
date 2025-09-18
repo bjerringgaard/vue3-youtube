@@ -22,8 +22,8 @@ export const PlayerState = {
   CUED: 5,
 }
 
-export type SuggestedVideoQuality = YT.SuggestedVideoQuality;
-export type PlayerVars = YT.PlayerVars;
+export type SuggestedVideoQuality = YT.SuggestedVideoQuality
+export type PlayerVars = YT.PlayerVars
 
 const YouTube = defineComponent({
   name: 'YouTube',
@@ -87,22 +87,24 @@ const YouTube = defineComponent({
     }
     return data
   },
+
   mounted() {
-    if (!(window as Window).onYouTubeIframeAPIReadyResolvers) {
-      (window as Window).onYouTubeIframeAPIReadyResolvers = []
+    // Create a reference to window once to avoid leading semicolons
+    const win = window as Window
+
+    if (!win.onYouTubeIframeAPIReadyResolvers) {
+      win.onYouTubeIframeAPIReadyResolvers = []
     }
 
     // Add our resolver to the queue regardless of script status
-    (window as Window).onYouTubeIframeAPIReadyResolvers?.push(this.resolver)
+    win.onYouTubeIframeAPIReadyResolvers?.push(this.resolver)
 
-    if (!(window as Window).onYouTubeIframeAPIReady) {
-      (window as Window).onYouTubeIframeAPIReady = () => {
+    if (!win.onYouTubeIframeAPIReady) {
+      win.onYouTubeIframeAPIReady = () => {
         // eslint-disable-next-line no-unused-expressions
-        (window as Window).onYouTubeIframeAPIReadyResolvers?.forEach(
-          (resolver: Function) => {
-            resolver()
-          }
-        )
+        win.onYouTubeIframeAPIReadyResolvers?.forEach((resolver: Function) => {
+          resolver()
+        })
       }
     }
 
@@ -162,11 +164,7 @@ const YouTube = defineComponent({
      * @param startSeconds   Time from which the video should start playing.
      * @param suggestedQuality   Suggested video player quality.
      */
-    cueVideoById(
-      videoId: string,
-      startSeconds?: number,
-      suggestedQuality?: SuggestedVideoQuality,
-    ): void {
+    cueVideoById(videoId: string, startSeconds?: number, suggestedQuality?: SuggestedVideoQuality): void {
       this.player?.cueVideoById(videoId, startSeconds, suggestedQuality)
     },
 
@@ -177,11 +175,7 @@ const YouTube = defineComponent({
      * @param startSeconds   Time from which the video should start playing.
      * @param suggestedQuality   Suggested video player quality.
      */
-    loadVideoById(
-      videoId: string,
-      startSeconds?: number,
-      suggestedQuality?: SuggestedVideoQuality,
-    ): void {
+    loadVideoById(videoId: string, startSeconds?: number, suggestedQuality?: SuggestedVideoQuality): void {
       this.player?.loadVideoById(videoId, startSeconds, suggestedQuality)
     },
 
@@ -192,16 +186,8 @@ const YouTube = defineComponent({
      * @param startSeconds   Time from which the video should start playing.
      * @param suggestedQuality   Suggested video player quality.
      */
-    cueVideoByUrl(
-      mediaContentUrl: string,
-      startSeconds?: number,
-      suggestedQuality?: SuggestedVideoQuality,
-    ): void {
-      this.player?.cueVideoByUrl(
-        mediaContentUrl,
-        startSeconds,
-        suggestedQuality
-      )
+    cueVideoByUrl(mediaContentUrl: string, startSeconds?: number, suggestedQuality?: SuggestedVideoQuality): void {
+      this.player?.cueVideoByUrl(mediaContentUrl, startSeconds, suggestedQuality)
     },
 
     /**
@@ -211,16 +197,8 @@ const YouTube = defineComponent({
      * @param startSeconds   Time from which the video should start playing.
      * @param suggestedQuality   Suggested video player quality.
      */
-    loadVideoByUrl(
-      mediaContentUrl: string,
-      startSeconds?: number,
-      suggestedQuality?: SuggestedVideoQuality,
-    ): void {
-      this.player?.loadVideoByUrl(
-        mediaContentUrl,
-        startSeconds,
-        suggestedQuality
-      )
+    loadVideoByUrl(mediaContentUrl: string, startSeconds?: number, suggestedQuality?: SuggestedVideoQuality): void {
+      this.player?.loadVideoByUrl(mediaContentUrl, startSeconds, suggestedQuality)
     },
 
     /**
@@ -254,12 +232,7 @@ const YouTube = defineComponent({
       startSeconds?: number,
       suggestedQuality?: SuggestedVideoQuality,
     ): void {
-      this.player?.loadPlaylist(
-        playlist,
-        index,
-        startSeconds,
-        suggestedQuality
-      )
+      this.player?.loadPlaylist(playlist, index, startSeconds, suggestedQuality)
     },
 
     /**
@@ -492,7 +465,7 @@ const YouTube = defineComponent({
   },
 })
 
-export type Methods = typeof YouTube['methods'];
+export type Methods = typeof YouTube['methods']
 
 export default YouTube
 </script>
